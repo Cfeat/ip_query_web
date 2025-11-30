@@ -1,0 +1,224 @@
+<!--
+本地访问：打开浏览器，输入 http://127.0.0.1:5000
+局域网访问：在同一网络下，其他设备输入 http://[服务器IP]:5000（服务器 IP 可在启动日志中查看，如 Running on http://192.168.1.105:5000）
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP地址及地理位置查询 | 网页版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'Arial', sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .header h1 {
+            color: #2d3748;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #718096;
+            font-size: 16px;
+        }
+        .ip-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #4299e1;
+        }
+        .ip-card.local {
+            border-left-color: #38b2ac;
+        }
+        .ip-card h2 {
+            color: #2d3748;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .ip-card h2 svg {
+            margin-right: 10px;
+        }
+        .info-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .info-value {
+            color: #2d3748;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .info-value.error {
+            color: #e53e3e;
+        }
+        .tip-box {
+            background: #fef7fb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #fce4ec;
+        }
+        .tip-box p {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .tip-box strong {
+            color: #9f7aea;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .info-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📍 IP地址及地理位置查询工具</h1>
+            <p>自动检测本地IP、公网IP及精准地理位置信息</p>
+        </div>
+
+        <!-- 本地IP信息卡片 -->
+        <div class="ip-card local">
+            <h2>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+                本地局域网IP（服务器端）
+            </h2>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">IP地址</span>
+                    <span class="info-value">{{ server_local_ip if server_local_ip else "获取失败" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">位置说明</span>
+                    <span class="info-value">内网私有地址，无公网地理位置</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">所属网络</span>
+                    <span class="info-value">服务器所在局域网（如家庭/公司网络）</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 公网IP及地理位置卡片 -->
+        <div class="ip-card">
+            <h2>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                公网IP及地理位置（访问者）
+            </h2>
+            <div class="info-list">
+                {% if public_geo_info %}
+                    <div class="info-item">
+                        <span class="info-label">公网IP</span>
+                        <span class="info-value">{{ public_geo_info.public_ip }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">地理位置</span>
+                        <span class="info-value">{{ public_geo_info.country }} > {{ public_geo_info.region }} > {{ public_geo_info.city }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">经纬度</span>
+                        <span class="info-value">{{ public_geo_info.latitude }}, {{ public_geo_info.longitude }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">时区</span>
+                        <span class="info-value">{{ public_geo_info.timezone }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">运营商/组织</span>
+                        <span class="info-value">{{ public_geo_info.isp }}</span>
+                    </div>
+                {% else %}
+                    <div class="info-item">
+                        <span class="info-label">查询结果</span>
+                        <span class="info-value error">无法获取公网IP及地理位置信息，请检查网络连接</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 提示信息 -->
+        <div class="tip-box">
+            <p>💡 <strong>提示：</strong></p>
+            <p>1. 公网IP位置为运营商机房或城市级定位，非精确到街道的物理地址，准确率约90%-98%；</p>
+            <p>2. 本地IP显示的是服务器所在局域网的IP，若需查看您自己的本地IP，可在设备网络设置中查询；</p>
+            <p>3. 若查询失败，请刷新页面重试（可能是API临时不可用）。</p>
+        </div>
+    </div>
+
+    <!-- 可选：添加JS获取用户本地IP（前端补充） -->
+    <script>
+        // 前端获取用户本地IP（通过WebRTC）
+        function getBrowserLocalIP() {
+            return new Promise((resolve) => {
+                const pc = new RTCPeerConnection({ iceServers: [] });
+                pc.createDataChannel('');
+                pc.createOffer().then(pc.setLocalDescription.bind(pc));
+                pc.onicecandidate = (ice) => {
+                    if (!ice || !ice.candidate || !ice.candidate.candidate) return;
+                    const ip = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+                    resolve(ip);
+                    pc.close();
+                };
+                setTimeout(() => resolve("获取失败"), 3000);
+            });
+        }
+
+        // 替换本地IP显示为用户自己的本地IP（可选）
+        window.onload = async () => {
+            const userLocalIp = await getBrowserLocalIP();
+            if (userLocalIp !== "获取失败") {
+                document.querySelector('.ip-card.local .info-value').textContent = userLocalIp;
+            }
+        };
+    </script>
+</body>
+</html>
