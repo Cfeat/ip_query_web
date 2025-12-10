@@ -1,0 +1,53 @@
+<div id="proxyAnalysis">
+    {% if proxy_info and proxy_info.is_proxy %}
+    <div class="alert {{ 'alert-danger' if proxy_info.confidence >= 80 else 'alert-warning' }}">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-2" style="font-size: 1.5rem;"></i>
+            <div>
+                <h6 class="mb-1">⚠️ 检测到中转节点</h6>
+                <p class="mb-1">类型: <span class="badge bg-danger">{{ proxy_info.proxy_type or "中转代理" }}</span></p>
+                {% if proxy_info.service_provider %}
+                <p class="mb-1"><i class="bi bi-building"></i> 服务提供商: <strong>{{ proxy_info.service_provider }}</strong></p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            <small class="text-muted">置信度: {{ proxy_info.confidence }}%</small>
+            <div class="confidence-bar">
+                <div class="confidence-fill" style="width: {{ proxy_info.confidence }}%"></div>
+            </div>
+        </div>
+        
+        {% if proxy_info.indicators %}
+        <div class="mt-3">
+            <small class="text-muted">检测依据:</small>
+            <ul class="mb-0 small">
+                {% for indicator in proxy_info.indicators %}
+                <li>{{ indicator }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if proxy_info.service_provider in ['Google', 'Cloudflare', 'OpenDNS'] %}
+        <div class="mt-3">
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> 此IP属于{{ proxy_info.service_provider }}的公共服务器，可能是：
+                <ul class="mt-2 mb-0">
+                    <li>公共DNS服务器</li>
+                    <li>CDN节点</li>
+                    <li>代理服务器</li>
+                    <li>VPN出口节点</li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        <i class="bi bi-shield-check"></i> 未检测到中转节点
+        <p class="mb-0 mt-2 small">该IP地址未出现在已知的中转/代理网络中。</p>
+    </div>
+    {% endif %}
+</div>

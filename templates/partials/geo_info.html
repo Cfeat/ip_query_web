@@ -1,0 +1,73 @@
+<div class="geo-info-content">
+    <div class="info-item">
+        <small class="text-muted">IP地址</small>
+        <div>
+            <span class="font-monospace">{{ geo_info.ip or geo_info.public_ip or '未知' }}</span>
+            {% if geo_info.ip_version %}
+            <span class="badge {{ 'ipv4-badge' if geo_info.ip_version == 'IPv4' else 'ipv6-badge' }} ip-type-badge ms-2">
+                {{ geo_info.ip_version }}
+            </span>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if geo_info.is_special %}
+    <div class="info-item">
+        <small class="text-muted">地址类型</small>
+        <div>
+            <span class="badge bg-warning text-dark">{{ geo_info.ip_type or '特殊地址' }}</span>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="info-item">
+        <small class="text-muted">地理位置</small>
+        <div>
+            {% if geo_info.city and geo_info.city != '未知' %}
+            <i class="bi bi-building"></i> {{ geo_info.city }}
+            {% endif %}
+            {% if geo_info.region and geo_info.region != '未知' %}
+            <i class="bi bi-geo-alt ms-2"></i> {{ geo_info.region }}
+            {% endif %}
+            {% if geo_info.country and geo_info.country != '未知' %}
+            <i class="bi bi-flag ms-2"></i> {{ geo_info.country }}
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="info-item">
+        <small class="text-muted">坐标</small>
+        <div>
+            {% if geo_info.latitude and geo_info.longitude and geo_info.latitude != 0 and geo_info.longitude != 0 %}
+            <span class="font-monospace">{{ geo_info.latitude }}, {{ geo_info.longitude }}</span>
+            <button class="btn btn-sm btn-outline-primary ms-2" onclick="copyToClipboard('{{ geo_info.latitude }},{{ geo_info.longitude }}')">
+                <i class="bi bi-clipboard"></i>
+            </button>
+            {% else %}
+            <span class="text-muted">未知</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="info-item">
+        <small class="text-muted">运营商</small>
+        <div>
+            {% if geo_info.isp and geo_info.isp != '未知' %}
+            <i class="bi bi-wifi"></i> {{ geo_info.isp }}
+            {% else %}
+            <span class="text-muted">未知</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="info-item">
+        <small class="text-muted">时区</small>
+        <div>
+            {% if geo_info.timezone and geo_info.timezone != '未知' %}
+            <i class="bi bi-clock"></i> {{ geo_info.timezone }}
+            {% else %}
+            <span class="text-muted">未知</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
