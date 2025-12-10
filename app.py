@@ -81,6 +81,340 @@ PROXY_ASNS = {
     '7018': 'AT&T',
 }
 
+IP_EXAMPLES_DATABASE = {
+    "public_services": [
+        {
+            "ip": "8.8.8.8",
+            "name": "Google Public DNS (IPv4)",
+            "type": "dns",
+            "provider": "Google",
+            "description": "谷歌公共DNS服务器，全球最知名的DNS服务"
+        },
+        {
+            "ip": "8.8.4.4",
+            "name": "Google Public DNS Backup (IPv4)",
+            "type": "dns",
+            "provider": "Google",
+            "description": "谷歌公共DNS备用服务器"
+        },
+        {
+            "ip": "1.1.1.1",
+            "name": "Cloudflare DNS (IPv4)",
+            "type": "dns",
+            "provider": "Cloudflare",
+            "description": "Cloudflare公共DNS，注重隐私保护"
+        },
+        {
+            "ip": "1.0.0.1",
+            "name": "Cloudflare DNS Backup (IPv4)",
+            "type": "dns",
+            "provider": "Cloudflare",
+            "description": "Cloudflare公共DNS备用服务器"
+        },
+        {
+            "ip": "208.67.222.222",
+            "name": "OpenDNS (IPv4)",
+            "type": "dns",
+            "provider": "OpenDNS",
+            "description": "思科旗下的公共DNS服务"
+        },
+        {
+            "ip": "208.67.220.220",
+            "name": "OpenDNS Backup (IPv4)",
+            "type": "dns",
+            "provider": "OpenDNS",
+            "description": "OpenDNS备用服务器"
+        },
+        {
+            "ip": "9.9.9.9",
+            "name": "Quad9 DNS (IPv4)",
+            "type": "dns",
+            "provider": "Quad9",
+            "description": "专注于安全的公共DNS服务"
+        },
+        {
+            "ip": "149.112.112.112",
+            "name": "Quad9 DNS Backup (IPv4)",
+            "type": "dns",
+            "provider": "Quad9",
+            "description": "Quad9备用DNS服务器"
+        },
+        {
+            "ip": "64.6.64.6",
+            "name": "Verisign Public DNS (IPv4)",
+            "type": "dns",
+            "provider": "Verisign",
+            "description": "Verisign公共DNS服务"
+        },
+        {
+            "ip": "64.6.65.6",
+            "name": "Verisign Public DNS Backup (IPv4)",
+            "type": "dns",
+            "provider": "Verisign",
+            "description": "Verisign备用DNS服务器"
+        }
+    ],
+    "ipv6_services": [
+        {
+            "ip": "2001:4860:4860::8888",
+            "name": "Google Public DNS (IPv6)",
+            "type": "dns",
+            "provider": "Google",
+            "description": "谷歌公共DNS IPv6版本"
+        },
+        {
+            "ip": "2001:4860:4860::8844",
+            "name": "Google Public DNS Backup (IPv6)",
+            "type": "dns",
+            "provider": "Google",
+            "description": "谷歌公共DNS IPv6备用"
+        },
+        {
+            "ip": "2606:4700:4700::1111",
+            "name": "Cloudflare DNS (IPv6)",
+            "type": "dns",
+            "provider": "Cloudflare",
+            "description": "Cloudflare公共DNS IPv6版本"
+        },
+        {
+            "ip": "2606:4700:4700::1001",
+            "name": "Cloudflare DNS Backup (IPv6)",
+            "type": "dns",
+            "provider": "Cloudflare",
+            "description": "Cloudflare公共DNS IPv6备用"
+        },
+        {
+            "ip": "2620:fe::fe",
+            "name": "Quad9 DNS (IPv6)",
+            "type": "dns",
+            "provider": "Quad9",
+            "description": "Quad9 DNS IPv6版本"
+        },
+        {
+            "ip": "2620:fe::9",
+            "name": "Quad9 DNS Backup (IPv6)",
+            "type": "dns",
+            "provider": "Quad9",
+            "description": "Quad9 DNS IPv6备用"
+        },
+        {
+            "ip": "2620:74:1b::1:1",
+            "name": "OpenDNS (IPv6)",
+            "type": "dns",
+            "provider": "OpenDNS",
+            "description": "OpenDNS IPv6版本"
+        },
+        {
+            "ip": "2620:74:1c::2:2",
+            "name": "OpenDNS Backup (IPv6)",
+            "type": "dns",
+            "provider": "OpenDNS",
+            "description": "OpenDNS IPv6备用"
+        }
+    ],
+    "cdn_networks": [
+        {
+            "ip": "104.16.0.0",
+            "name": "Cloudflare CDN",
+            "type": "cdn",
+            "provider": "Cloudflare",
+            "description": "Cloudflare CDN网络地址"
+        },
+        {
+            "ip": "172.217.0.0",
+            "name": "Google CDN",
+            "type": "cdn",
+            "provider": "Google",
+            "description": "谷歌CDN网络地址"
+        },
+        {
+            "ip": "13.107.246.0",
+            "name": "Microsoft Azure CDN",
+            "type": "cdn",
+            "provider": "Microsoft",
+            "description": "微软Azure CDN网络"
+        },
+        {
+            "ip": "99.84.0.0",
+            "name": "Amazon CloudFront",
+            "type": "cdn",
+            "provider": "Amazon",
+            "description": "亚马逊CloudFront CDN"
+        }
+    ],
+    "vpn_services": [
+        {
+            "ip": "185.159.157.1",
+            "name": "NordVPN Server",
+            "type": "vpn",
+            "provider": "NordVPN",
+            "description": "NordVPN服务器节点"
+        },
+        {
+            "ip": "162.245.241.221",
+            "name": "ExpressVPN Server",
+            "type": "vpn",
+            "provider": "ExpressVPN",
+            "description": "ExpressVPN服务器节点"
+        },
+        {
+            "ip": "45.90.28.0",
+            "name": "ProtonVPN Server",
+            "type": "vpn",
+            "provider": "ProtonVPN",
+            "description": "ProtonVPN服务器网络"
+        }
+    ],
+    "time_servers": [
+        {
+            "ip": "time.google.com",
+            "name": "Google Time Server",
+            "type": "ntp",
+            "provider": "Google",
+            "description": "谷歌时间服务器（可通过DNS解析）"
+        },
+        {
+            "ip": "time.windows.com",
+            "name": "Microsoft Time Server",
+            "type": "ntp",
+            "provider": "Microsoft",
+            "description": "微软时间服务器"
+        },
+        {
+            "ip": "time.apple.com",
+            "name": "Apple Time Server",
+            "type": "ntp",
+            "provider": "Apple",
+            "description": "苹果时间服务器"
+        },
+        {
+            "ip": "pool.ntp.org",
+            "name": "NTP Pool Project",
+            "type": "ntp",
+            "provider": "NTP Pool",
+            "description": "NTP时间服务器池"
+        }
+    ],
+    "educational_ips": [
+        {
+            "ip": "93.184.216.34",
+            "name": "Example.com",
+            "type": "website",
+            "provider": "IANA",
+            "description": "IANA保留的示例网站地址"
+        },
+        {
+            "ip": "192.0.2.1",
+            "name": "TEST-NET-1",
+            "type": "test",
+            "provider": "IANA",
+            "description": "IANA保留的测试网络地址"
+        },
+        {
+            "ip": "198.51.100.1",
+            "name": "TEST-NET-2",
+            "type": "test",
+            "provider": "IANA",
+            "description": "IANA保留的测试网络地址"
+        },
+        {
+            "ip": "203.0.113.1",
+            "name": "TEST-NET-3",
+            "type": "test",
+            "provider": "IANA",
+            "description": "IANA保留的测试网络地址"
+        },
+        {
+            "ip": "192.168.1.1",
+            "name": "Private Network Example",
+            "type": "private",
+            "provider": "RFC 1918",
+            "description": "私有网络地址示例（C类）"
+        },
+        {
+            "ip": "10.0.0.1",
+            "name": "Private Network Example",
+            "type": "private",
+            "provider": "RFC 1918",
+            "description": "私有网络地址示例（A类）"
+        },
+        {
+            "ip": "172.16.0.1",
+            "name": "Private Network Example",
+            "type": "private",
+            "provider": "RFC 1918",
+            "description": "私有网络地址示例（B类）"
+        }
+    ],
+    "well_known_websites": [
+        {
+            "ip": "142.250.185.78",
+            "name": "Google.com",
+            "type": "website",
+            "provider": "Google",
+            "description": "谷歌搜索服务器"
+        },
+        {
+            "ip": "104.244.42.1",
+            "name": "Twitter.com",
+            "type": "website",
+            "provider": "Twitter",
+            "description": "Twitter/X服务器"
+        },
+        {
+            "ip": "31.13.72.1",
+            "name": "Facebook.com",
+            "type": "website",
+            "provider": "Meta",
+            "description": "Facebook服务器"
+        },
+        {
+            "ip": "13.33.243.1",
+            "name": "Amazon.com",
+            "type": "website",
+            "provider": "Amazon",
+            "description": "亚马逊服务器"
+        },
+        {
+            "ip": "20.231.239.246",
+            "name": "Microsoft.com",
+            "type": "website",
+            "provider": "Microsoft",
+            "description": "微软服务器"
+        },
+        {
+            "ip": "140.82.121.3",
+            "name": "GitHub.com",
+            "type": "website",
+            "provider": "GitHub",
+            "description": "GitHub服务器"
+        },
+        {
+            "ip": "151.101.1.1",
+            "name": "Reddit.com",
+            "type": "website",
+            "provider": "Reddit",
+            "description": "Reddit服务器"
+        }
+    ],
+    "tor_exit_nodes": [
+        {
+            "ip": "51.222.86.1",
+            "name": "Tor Exit Node",
+            "type": "tor",
+            "provider": "Tor Project",
+            "description": "Tor网络出口节点（示例）"
+        },
+        {
+            "ip": "185.220.101.1",
+            "name": "Tor Exit Node",
+            "type": "tor",
+            "provider": "Tor Project",
+            "description": "Tor网络出口节点（示例）"
+        }
+    ]
+}
+
 @dataclass
 class GeoAPI:
     name: str
@@ -602,6 +936,54 @@ class GeoLocator:
             return response.status_code < 500
         except Exception:
             return False
+        
+    def get_example_ips(self, category: str = None, limit: int = None) -> List[Dict[str, Any]]:
+        """获取示例IP地址"""
+        examples = []
+        
+        if category and category in IP_EXAMPLES_DATABASE:
+            examples = IP_EXAMPLES_DATABASE[category]
+        else:
+            # 返回所有示例
+            for cat, ips in IP_EXAMPLES_DATABASE.items():
+                examples.extend(ips)
+        
+        if limit and len(examples) > limit:
+            return examples[:limit]
+        
+        return examples
+
+    def get_random_example_ip(self) -> Dict[str, Any]:
+        """随机获取一个示例IP"""
+        import random
+        all_examples = []
+        for category in IP_EXAMPLES_DATABASE.values():
+            all_examples.extend(category)
+        
+        if all_examples:
+            return random.choice(all_examples)
+        return None
+
+    def resolve_domain_to_ip(self, domain: str) -> Optional[str]:
+        """解析域名到IP地址"""
+        try:
+            import socket
+            # 首先尝试获取IPv4地址
+            ipv4_info = socket.getaddrinfo(domain, None, socket.AF_INET)
+            if ipv4_info:
+                return ipv4_info[0][4][0]
+            
+            # 如果没有IPv4，尝试IPv6
+            ipv6_info = socket.getaddrinfo(domain, None, socket.AF_INET6)
+            if ipv6_info:
+                return ipv6_info[0][4][0]
+                
+        except (socket.gaierror, socket.herror) as e:
+            logger.error(f"域名解析失败 {domain}: {e}")
+        except Exception as e:
+            logger.error(f"域名解析错误 {domain}: {e}")
+        
+        return None
 
 # 创建地理定位器实例
 geo_locator = GeoLocator()
@@ -751,6 +1133,89 @@ def api_network_info(ip_address: str):
     except Exception as e:
         logger.error(f"网络信息查询错误: {e}")
         return jsonify({"error": "查询失败"}), 500
+    
+@app.route('/api/examples')
+def api_get_examples():
+    """获取示例IP地址"""
+    try:
+        category = request.args.get('category', '')
+        limit = request.args.get('limit', type=int)
+        
+        examples = geo_locator.get_example_ips(category if category else None, limit)
+        
+        # 解析域名类型的示例
+        for example in examples:
+            if example['ip'] and '.' in example['ip'] and not example['ip'][0].isdigit():
+                # 可能是域名，尝试解析
+                ip_address = geo_locator.resolve_domain_to_ip(example['ip'])
+                if ip_address:
+                    example['resolved_ip'] = ip_address
+                    example['original'] = example['ip']
+                    example['ip'] = ip_address
+        
+        return jsonify({
+            "count": len(examples),
+            "category": category or "all",
+            "examples": examples
+        })
+    except Exception as e:
+        logger.error(f"获取示例IP失败: {e}")
+        return jsonify({"error": "获取示例IP失败"}), 500
+
+@app.route('/api/examples/random')
+def api_get_random_example():
+    """随机获取一个示例IP"""
+    try:
+        example = geo_locator.get_random_example_ip()
+        if example:
+            # 解析域名
+            if example['ip'] and '.' in example['ip'] and not example['ip'][0].isdigit():
+                ip_address = geo_locator.resolve_domain_to_ip(example['ip'])
+                if ip_address:
+                    example['resolved_ip'] = ip_address
+                    example['original'] = example['ip']
+                    example['ip'] = ip_address
+            
+            return jsonify(example)
+        return jsonify({"error": "没有可用的示例IP"}), 404
+    except Exception as e:
+        logger.error(f"获取随机示例失败: {e}")
+        return jsonify({"error": "获取随机示例失败"}), 500
+
+@app.route('/api/examples/categories')
+def api_get_categories():
+    """获取示例IP分类"""
+    try:
+        categories = []
+        for category_name, items in IP_EXAMPLES_DATABASE.items():
+            categories.append({
+                "name": category_name,
+                "display_name": category_name.replace('_', ' ').title(),
+                "count": len(items),
+                "description": get_category_description(category_name)
+            })
+        
+        return jsonify({
+            "count": len(categories),
+            "categories": categories
+        })
+    except Exception as e:
+        logger.error(f"获取分类失败: {e}")
+        return jsonify({"error": "获取分类失败"}), 500
+
+def get_category_description(category: str) -> str:
+    """获取分类描述"""
+    descriptions = {
+        "public_services": "公共网络服务IP地址，如DNS服务器、NTP时间服务器等",
+        "ipv6_services": "IPv6网络服务地址",
+        "cdn_networks": "内容分发网络(CDN)IP地址",
+        "vpn_services": "VPN服务提供商服务器IP",
+        "time_servers": "网络时间协议(NTP)服务器",
+        "educational_ips": "教育用途的测试和示例IP地址",
+        "well_known_websites": "知名网站的服务器IP",
+        "tor_exit_nodes": "Tor网络出口节点IP地址"
+    }
+    return descriptions.get(category, "IP地址示例")
 
 if __name__ == '__main__':
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'

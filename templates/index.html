@@ -275,6 +275,74 @@
             </div>
         </div>
 
+        <div class="glass-card p-4 mb-4">
+            <h5 class="card-title mb-3"><i class="bi bi-collection me-2"></i>示例IP地址库</h5>
+            
+            <!-- 快速选择 -->
+            <div class="mb-3">
+                <h6><i class="bi bi-lightning me-2"></i>快速选择</h6>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button class="btn btn-sm btn-outline-primary" onclick="selectExampleIP('8.8.8.8')">
+                        <i class="bi bi-google me-1"></i>Google DNS
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="selectExampleIP('1.1.1.1')">
+                        <i class="bi bi-cloud me-1"></i>Cloudflare DNS
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning" onclick="selectExampleIP('208.67.222.222')">
+                        <i class="bi bi-shield me-1"></i>OpenDNS
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" onclick="selectExampleIP('93.184.216.34')">
+                        <i class="bi bi-globe me-1"></i>Example.com
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="selectExampleIP('2001:4860:4860::8888')">
+                        <i class="bi bi-ipv6 me-1"></i>Google IPv6 DNS
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 分类选择 -->
+            <div class="mb-3">
+                <h6><i class="bi bi-grid me-2"></i>按分类浏览</h6>
+                <div class="d-flex flex-wrap gap-2 mb-3" id="categoryButtons">
+                    <!-- 分类按钮将通过JavaScript动态加载 -->
+                </div>
+            </div>
+            
+            <!-- IP列表 -->
+            <div>
+                <h6><i class="bi bi-list me-2"></i>示例IP列表</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover" id="examplesTable">
+                        <thead>
+                            <tr>
+                                <th>IP地址</th>
+                                <th>名称</th>
+                                <th>类型</th>
+                                <th>服务商</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="examplesTableBody">
+                            <!-- 数据将通过JavaScript动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="loadRandomExample()">
+                            <i class="bi bi-shuffle me-1"></i>随机选择一个
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary ms-2" onclick="loadAllExamples()">
+                            <i class="bi bi-arrow-clockwise me-1"></i>重新加载
+                        </button>
+                    </div>
+                    <div class="text-muted small">
+                        共 <span id="exampleCount">0</span> 个示例IP地址
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- IP信息展示 -->
         <div class="row mb-4">
             <div class="col-md-6 mb-3">
@@ -1004,6 +1072,240 @@
             };
             return icons[type] || 'bi-info-circle-fill';
         }
+
+        // 选择示例IP
+        function selectExampleIP(ip, name = '') {
+            const input = document.getElementById('ipInput');
+            input.value = ip;
+            
+            if (name) {
+                showAlert(`已选择: ${name} (${ip})`, 'info');
+            } else {
+                showAlert(`已选择IP: ${ip}`, 'info');
+            }
+            
+            // 自动滚动到输入框
+            input.focus();
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 加载示例IP分类
+        async function loadExampleCategories() {
+            try {
+                const response = await fetch('/api/examples/categories');
+                const data = await response.json();
+                
+                if (response.ok && data.categories) {
+                    const container = document.getElementById('categoryButtons');
+                    container.innerHTML = '';
+                    
+                    data.categories.forEach(category => {
+                        const button = document.createElement('button');
+                        button.className = 'btn btn-sm btn-outline-secondary';
+                        button.innerHTML = `<i class="bi bi-tag me-1"></i>${category.display_name} (${category.count})`;
+                        button.title = category.description;
+                        button.onclick = () => loadExamplesByCategory(category.name);
+                        
+                        container.appendChild(button);
+                    });
+                    
+                    // 添加"全部"按钮
+                    const allButton = document.createElement('button');
+                    allButton.className = 'btn btn-sm btn-outline-primary';
+                    allButton.innerHTML = '<i class="bi bi-collection me-1"></i>全部示例';
+                    allButton.onclick = loadAllExamples;
+                    container.prepend(allButton);
+                }
+            } catch (error) {
+                console.error('加载分类失败:', error);
+            }
+        }
+
+        // 按分类加载示例
+        async function loadExamplesByCategory(category) {
+            try {
+                const response = await fetch(`/api/examples?category=${category}`);
+                const data = await response.json();
+                
+                if (response.ok && data.examples) {
+                    displayExamplesTable(data.examples);
+                    updateExampleCount(data.count);
+                    
+                    // 高亮当前分类
+                    document.querySelectorAll('#categoryButtons .btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+                    
+                    showAlert(`已加载 ${category.replace('_', ' ')} 分类的 ${data.count} 个IP`, 'success');
+                }
+            } catch (error) {
+                console.error('加载示例失败:', error);
+                showAlert('加载示例IP失败: ' + error.message, 'danger');
+            }
+        }
+
+        // 加载所有示例
+        async function loadAllExamples() {
+            try {
+                const response = await fetch('/api/examples');
+                const data = await response.json();
+                
+                if (response.ok && data.examples) {
+                    displayExamplesTable(data.examples);
+                    updateExampleCount(data.count);
+                    
+                    // 移除所有分类的高亮
+                    document.querySelectorAll('#categoryButtons .btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    showAlert(`已加载全部 ${data.count} 个示例IP`, 'success');
+                }
+            } catch (error) {
+                console.error('加载全部示例失败:', error);
+                showAlert('加载示例IP失败: ' + error.message, 'danger');
+            }
+        }
+
+        // 加载随机示例
+        async function loadRandomExample() {
+            try {
+                const response = await fetch('/api/examples/random');
+                const data = await response.json();
+                
+                if (response.ok && !data.error) {
+                    // 显示在表格中
+                    displayExamplesTable([data]);
+                    updateExampleCount(1);
+                    
+                    // 自动选择这个IP
+                    selectExampleIP(
+                        data.ip, 
+                        `${data.name}${data.original ? ` (${data.original})` : ''}`
+                    );
+                    
+                    showAlert(`随机选择: ${data.name} - ${data.description}`, 'info');
+                } else {
+                    showAlert(data.error || '获取随机示例失败', 'warning');
+                }
+            } catch (error) {
+                console.error('加载随机示例失败:', error);
+                showAlert('获取随机示例失败: ' + error.message, 'danger');
+            }
+        }
+
+        // 显示示例表格
+        function displayExamplesTable(examples) {
+            const tbody = document.getElementById('examplesTableBody');
+            
+            if (!examples || examples.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            <i class="bi bi-inboxes"></i> 没有找到示例IP地址
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            examples.forEach(example => {
+                const typeBadge = getTypeBadge(example.type);
+                const providerBadge = getProviderBadge(example.provider);
+                
+                html += `
+                    <tr>
+                        <td>
+                            <span class="font-monospace">${example.ip || '未知'}</span>
+                            ${example.original ? `<br><small class="text-muted">${example.original}</small>` : ''}
+                        </td>
+                        <td>
+                            <div class="fw-medium">${example.name || '未命名'}</div>
+                            <small class="text-muted">${example.description || ''}</small>
+                        </td>
+                        <td>${typeBadge}</td>
+                        <td>${providerBadge}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" onclick="selectExampleIP('${example.ip}', '${example.name}')" title="选择">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                                <button class="btn btn-outline-info" onclick="queryIP('${example.ip}')" title="查询">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="copyToClipboard('${example.ip}')" title="复制">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // 获取类型徽章
+        function getTypeBadge(type) {
+            const badges = {
+                'dns': { class: 'bg-primary', icon: 'bi-hdd-network', text: 'DNS' },
+                'cdn': { class: 'bg-success', icon: 'bi-cloud-arrow-down', text: 'CDN' },
+                'vpn': { class: 'bg-warning', icon: 'bi-shield-lock', text: 'VPN' },
+                'ntp': { class: 'bg-info', icon: 'bi-clock', text: 'NTP' },
+                'website': { class: 'bg-secondary', icon: 'bi-globe', text: '网站' },
+                'test': { class: 'bg-dark', icon: 'bi-flask', text: '测试' },
+                'private': { class: 'bg-dark', icon: 'bi-house-lock', text: '私有' },
+                'tor': { class: 'bg-danger', icon: 'bi-incognito', text: 'Tor' }
+            };
+            
+            const badge = badges[type] || { class: 'bg-secondary', icon: 'bi-question-circle', text: type || '未知' };
+            
+            return `<span class="badge ${badge.class}"><i class="bi ${badge.icon} me-1"></i>${badge.text}</span>`;
+        }
+
+        // 获取服务商徽章
+        function getProviderBadge(provider) {
+            const providers = {
+                'Google': { class: 'bg-danger', color: '#fff' },
+                'Cloudflare': { class: 'bg-warning', color: '#000' },
+                'OpenDNS': { class: 'bg-info', color: '#fff' },
+                'Quad9': { class: 'bg-success', color: '#fff' },
+                'Verisign': { class: 'bg-primary', color: '#fff' },
+                'Microsoft': { class: 'bg-primary', color: '#fff' },
+                'Amazon': { class: 'bg-warning', color: '#000' },
+                'Meta': { class: 'bg-primary', color: '#fff' },
+                'Twitter': { class: 'bg-info', color: '#fff' },
+                'GitHub': { class: 'bg-dark', color: '#fff' },
+                'Reddit': { class: 'bg-danger', color: '#fff' },
+                'NordVPN': { class: 'bg-dark', color: '#fff' },
+                'ExpressVPN': { class: 'bg-success', color: '#fff' },
+                'ProtonVPN': { class: 'bg-info', color: '#fff' },
+                'Tor Project': { class: 'bg-dark', color: '#fff' },
+                'IANA': { class: 'bg-secondary', color: '#fff' },
+                'NTP Pool': { class: 'bg-info', color: '#fff' }
+            };
+            
+            const providerInfo = providers[provider] || { class: 'bg-secondary', color: '#fff' };
+            
+            return `<span class="badge ${providerInfo.class}" style="color: ${providerInfo.color}">${provider}</span>`;
+        }
+
+        // 更新示例计数
+        function updateExampleCount(count) {
+            document.getElementById('exampleCount').textContent = count;
+        }
+
+        // 在DOM加载完成后调用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载示例IP分类
+            setTimeout(loadExampleCategories, 500);
+            
+            // 初始加载一些示例
+            setTimeout(loadAllExamples, 800);
+        });
         
         // 页面加载完成
         document.addEventListener('DOMContentLoaded', function() {
